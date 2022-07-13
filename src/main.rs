@@ -4,6 +4,7 @@ mod settings;
 use gtk::glib;
 use gtk::prelude::*;
 use gtk::gdk_pixbuf::{Pixbuf, InterpType};
+use gtk::gdk::Rectangle;
 use gtk::{Application, ApplicationWindow, Builder, FileChooserButton, ComboBox, Stack, Button, Image};
 
 use std::cell::RefCell;
@@ -43,14 +44,32 @@ fn set_page(builder: &Builder, page: Page) {
     };
 }
 
+fn calculate_allocation_based_on_aspect_ratio(container: Rectangle, width: i32, height: i32) -> (i32, i32) {
+    if width > height {
+        let aspect_ratio = height as f64 / width as f64;
+        let new_width = container.width();
+        let new_height = new_width as f64 * aspect_ratio;
+        (new_width, new_height as i32)
+    }
+    else {
+        let aspect_ratio: f64 = width as f64 / height as f64;
+        let new_height = container.height();
+        let new_width = new_height as f64 * aspect_ratio;
+        (new_width.floor() as i32, new_height)
+    }
+}
+
 fn resize_image(builder: &Builder) {
     let pages: Stack = builder.object("pages").expect("Failed to get image_page");
     let image: Image = builder.object("image").expect("Failed to get image");
 
     if let Some(pixbuf) = image.pixbuf() {
-        let allocation = pages.allocation();
-        let new_image = pixbuf.scale_simple(allocation.width(), allocation.height(), InterpType::Bilinear).unwrap();
-        image.set_pixbuf(Some(&new_image));
+        let container_allocation = pages.allocation();
+        let (width, height) = calculate_allocation_based_on_aspect_ratio(container_allocation, pixbuf.width(), pixbuf.height());        
+
+        if let Some(pixbuf) = pixbuf.scale_simple(width, height, InterpType::Bilinear) {
+            image.set_pixbuf(Some(&pixbuf));
+        }
     }
 }
 
