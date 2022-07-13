@@ -1,0 +1,7 @@
+[package]
+name = "quick-pose"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+gtk = "0.15.5"
