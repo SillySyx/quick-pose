@@ -1,5 +1,7 @@
 use std::fs::read_dir;
 use core::fmt::Debug;
+use rand::seq::SliceRandom;
+use rand::thread_rng;
 
 use super::settings::Settings;
 
@@ -84,5 +86,20 @@ fn read_images_in_folder(folder: &str) -> Vec<String> {
 }
 
 fn select_images(images: Vec<String>, number_of_images_to_select: usize) -> Vec<String> {
+    let images = shuffle_images(images);
+
+    if number_of_images_to_select > images.len() {
+        return images[..images.len()].to_vec();
+    }
+
+    images[..number_of_images_to_select].to_vec()
+}
+
+fn shuffle_images(images: Vec<String>) -> Vec<String> {
+    let mut rng = thread_rng();
+
+    let mut images = images;
+    images.shuffle(&mut rng);
+
     images
 }

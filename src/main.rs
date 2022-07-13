@@ -3,7 +3,7 @@ mod settings;
 
 use gtk::glib;
 use gtk::prelude::*;
-use gtk::gdk_pixbuf::{Pixbuf, InterpType};
+use gtk::gdk_pixbuf::{Pixbuf, InterpType, PixbufRotation};
 use gtk::gdk::Rectangle;
 use gtk::{Application, ApplicationWindow, Builder, FileChooserButton, ComboBox, Stack, Button, Image};
 
@@ -70,6 +70,24 @@ fn resize_image(builder: &Builder) {
         if let Some(pixbuf) = pixbuf.scale_simple(width, height, InterpType::Bilinear) {
             image.set_pixbuf(Some(&pixbuf));
         }
+    }
+}
+
+fn flip_image(builder: &Builder) {
+    let image: Image = builder.object("image").expect("Failed to get image");
+
+    if let Some(pixbuf) = image.pixbuf() {
+        let pixbuf = pixbuf.flip(true).unwrap();
+        image.set_pixbuf(Some(&pixbuf));
+    }
+}
+
+fn rotate_image(builder: &Builder, rotation: PixbufRotation) {
+    let image: Image = builder.object("image").expect("Failed to get image");
+
+    if let Some(pixbuf) = image.pixbuf() {
+        let pixbuf = pixbuf.rotate_simple(rotation).unwrap();
+        image.set_pixbuf(Some(&pixbuf));
     }
 }
 
@@ -194,6 +212,20 @@ fn build_ui(application: &Application) {
                     set_page(&builder, Page::Complete);
                 }
 
+                None
+            })),
+            "flip_image_clicked" => Box::new(glib::clone!(@strong builder => move |_| {
+                flip_image(&builder);
+                None
+            })),
+            "rotate_left_clicked" => Box::new(glib::clone!(@strong builder => move |_| {
+                rotate_image(&builder, PixbufRotation::Counterclockwise);
+                resize_image(&builder);
+                None
+            })),
+            "rotate_right_clicked" => Box::new(glib::clone!(@strong builder => move |_| {
+                rotate_image(&builder, PixbufRotation::Clockwise);
+                resize_image(&builder);
                 None
             })),
             _ => Box::new(|_| None),
