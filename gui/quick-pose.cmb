@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<!DOCTYPE cambalache-project SYSTEM "cambalache-project.dtd">
+<cambalache-project version="0.10.2" target_tk="gtk-4.0">
+  <ui>
+	(1,None,"quick-pose.ui","quick-pose.ui",None,None,None,None,None,None)
+  </ui>
+  <object>
+	(1,1,"GtkApplicationWindow",None,None,None,None,None,None),
+	(1,2,"GtkHeaderBar",None,1,None,"titlebar",None,-1),
+	(1,3,"GtkButton",None,2,None,"start",None,2),
+	(1,4,"GtkButton",None,2,None,"end",None,4),
+	(1,5,"GtkButton",None,2,None,"end",None,3),
+	(1,6,"GtkButton",None,2,None,"end",None,1),
+	(1,7,"GtkMenuButton",None,2,None,"end",None,None),
+	(1,12,"GtkTreeStore","test2",None,None,None,None,None),
+	(1,13,"GtkStack",None,1,None,None,None,None),
+	(1,14,"GtkComboBox",None,13,None,None,None,None)
+  </object>
+  <object_property>
+	(1,1,"GtkWindow","default-height","600",None,None,None,None,None),
+	(1,1,"GtkWindow","default-width","800",None,None,None,None,None),
+	(1,1,"GtkWindow","title","Quick pose",None,None,None,None,None),
+	(1,3,"GtkButton","icon-name","go-previous-symbolic",None,None,None,None,None),
+	(1,4,"GtkButton","icon-name","go-previous-symbolic",None,None,None,None,None),
+	(1,5,"GtkButton","icon-name","media-playback-start-symbolic",None,None,None,None,None),
+	(1,6,"GtkButton","icon-name","go-next-symbolic",None,None,None,None,None),
+	(1,7,"GtkMenuButton","popover","9",None,None,None,None,None),
+	(1,14,"GtkComboBox","model","test2",None,None,None,None,None)
+  </object_property>
+</cambalache-project>
