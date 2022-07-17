@@ -45,12 +45,10 @@ impl Model for FolderPicker {
 #[relm4::widget(pub)]
 impl Widgets<FolderPicker, SettingsPage> for FolderPickerWidgets {
     view! {
-        gtk::FileChooserDialog {
+        gtk::FileChooserNative {
             set_modal: true,
             set_action: gtk::FileChooserAction::SelectFolder,
             set_visible: watch!(model.visible),
-
-            add_button: args!("Select", gtk::ResponseType::Accept),
 
             connect_response(sender) => move |dialog, response| {
                 if response == gtk::ResponseType::Accept {

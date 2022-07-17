@@ -13,6 +13,16 @@ pub struct SettingsPage {
     settings: Settings,
 }
 
+impl SettingsPage {
+    pub fn get_folder_text(&self) -> String {
+        if self.settings.folder.is_empty() {
+            return "None".into();
+        }
+
+        self.settings.folder.clone()
+    }
+}
+
 pub enum SettingsPageMsg {
     Start,
     SelectFolder,
@@ -98,17 +108,17 @@ impl Widgets<SettingsPage, App> for SettingsPageWidgets {
                     set_halign: gtk::Align::Start,
                     set_label: "Select folder",
                 },
-                append = &gtk::Box {
-                    set_halign: gtk::Align::Fill,
-                    append = &gtk::Label {
-                        set_halign: gtk::Align::Fill,
-                        set_label: watch!(&model.settings.folder),
-                    },
-                    append = &gtk::Button {
-                        set_label: "Select",
-                        connect_clicked(sender) => move |_| {
-                            send!(sender, SettingsPageMsg::SelectFolder);
-                        },
+                append = &gtk::Label {
+                    set_halign: gtk::Align::Start,
+                    set_sensitive: false,
+                    set_label: "Images will randomly be selected from this folder.",
+                },
+                append = &gtk::Button {
+                    set_label: watch!(&model.get_folder_text()),
+                    set_icon_name: "go-down-symbolic",
+
+                    connect_clicked(sender) => move |_| {
+                        send!(sender, SettingsPageMsg::SelectFolder);
                     },
                 },
             },
@@ -122,6 +132,7 @@ impl Widgets<SettingsPage, App> for SettingsPageWidgets {
                 },
                 append = &gtk::Label {
                     set_halign: gtk::Align::Start,
+                    set_sensitive: false,
                     set_label: "Select how many images that should be randomly selected 
 from defined folder.",
                 },
@@ -144,6 +155,7 @@ from defined folder.",
                 },
                 append = &gtk::Label {
                     set_halign: gtk::Align::Start,
+                    set_sensitive: false,
                     set_label: "Limit how long each image is displayed before switching to 
 the next one.",
                 },
@@ -169,6 +181,7 @@ the next one.",
                 },
                 append = &gtk::Label {
                     set_halign: gtk::Align::Start,
+                    set_sensitive: false,
                     set_label: "Add extra time between each image, useful if you want to
 perform some smaller tasks after each image.",
                 },

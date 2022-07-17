@@ -38,9 +38,6 @@ pub enum AppMsg {
     ShowSessionComplete,
     ShowError(String),
     StartNewSession(Settings),
-    NextImage,
-    PauseImage,
-    PrevImage,
 }
 
 pub struct App {
@@ -79,15 +76,6 @@ impl AppUpdate for App {
                 components.error_page.send(ErrorPageMsg::ErrorMessage(error)).unwrap();
                 self.page = Page::Error;
             },
-            AppMsg::NextImage => {
-                components.session_page.send(SessionPageMsg::NextImage).unwrap();
-            },
-            AppMsg::PauseImage => {
-                components.session_page.send(SessionPageMsg::PauseImage).unwrap();
-            },
-            AppMsg::PrevImage => {
-                components.session_page.send(SessionPageMsg::PrevImage).unwrap();
-            },
         }
         true
     }
@@ -106,45 +94,9 @@ impl Widgets<App, ()> for AppWidgets {
                 pack_start = &gtk::Button {
                     set_visible: watch!(model.page != Page::Settings),
                     set_icon_name: "go-previous-symbolic",
+                    set_has_frame: false,
                     connect_clicked(sender) => move |_| {
                         send!(sender, AppMsg::ShowSettings);
-                    },
-                },
-
-                pack_end = &gtk::MenuButton {
-                    set_visible: watch!(model.page == Page::Session),
-                    set_icon_name: "view-more-horizontal-symbolic",
-
-                    set_popover = Some(&gtk::Popover) {
-                        set_child = Some(&gtk::Box) {
-                            append = &gtk::Button {
-                                set_label: "hello",
-                            },
-                        }
-                    }
-                },
-
-                pack_end = &gtk::Button {
-                    set_visible: watch!(model.page == Page::Session),
-                    set_icon_name: "go-next-symbolic",
-                    connect_clicked(sender) => move |_| {
-                        send!(sender, AppMsg::NextImage);
-                    },
-                },
-
-                pack_end = &gtk::Button {
-                    set_visible: watch!(model.page == Page::Session),
-                    set_icon_name: "media-playback-start-symbolic",
-                    connect_clicked(sender) => move |_| {
-                        send!(sender, AppMsg::PauseImage);
-                    },
-                },
-
-                pack_end = &gtk::Button {
-                    set_visible: watch!(model.page == Page::Session),
-                    set_icon_name: "go-previous-symbolic",
-                    connect_clicked(sender) => move |_| {
-                        send!(sender, AppMsg::PrevImage);
                     },
                 },
             },
