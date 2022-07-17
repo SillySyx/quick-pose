@@ -5,13 +5,14 @@ use crate::{
     components::*,
     page::Page,
     session::Session,
+    settings::Settings,
 };
 
 pub struct AppComponents {
     settings_page: RelmComponent<SettingsPage, App>,
     session_page: RelmComponent<SessionPage, App>,
-    complete_page: RelmComponent<SessionPage, App>,
-    error_page: RelmComponent<SessionPage, App>,
+    complete_page: RelmComponent<CompletePage, App>,
+    error_page: RelmComponent<ErrorPage, App>,
 }
 
 impl Components<App> for AppComponents {
@@ -34,22 +35,22 @@ impl Components<App> for AppComponents {
 
 pub enum AppMsg {
     ShowSettings,
+    ShowSessionComplete,
     ShowError(String),
-    StartNewSession,
+    StartNewSession(Settings),
+    NextImage,
+    PauseImage,
+    PrevImage,
 }
 
 pub struct App {
     pub page: Page,
-    pub error: Option<String>,
-    pub session: Session,
 }
 
 impl App {
     pub fn new() -> Self {
         Self {
             page: Page::Settings,
-            error: None,
-            session: Session::new(),
         }
     }
 }
@@ -61,17 +62,31 @@ impl Model for App {
 }
 
 impl AppUpdate for App {
-    fn update(&mut self, msg: AppMsg, _components: &AppComponents, _sender: Sender<AppMsg>) -> bool {
+    fn update(&mut self, msg: AppMsg, components: &AppComponents, _sender: Sender<AppMsg>) -> bool {
         match msg {
             AppMsg::ShowSettings => {
                 self.page = Page::Settings;
             },
-            AppMsg::StartNewSession => {
+            AppMsg::StartNewSession(settings) => {
+                let session = Session::from(&settings);
+                components.session_page.send(SessionPageMsg::NewSession(session)).unwrap();
                 self.page = Page::Session;
             },
+            AppMsg::ShowSessionComplete => {
+                self.page = Page::Complete;
+            },
             AppMsg::ShowError(error) => {
-                self.error = Some(error);
+                components.error_page.send(ErrorPageMsg::ErrorMessage(error)).unwrap();
                 self.page = Page::Error;
+            },
+            AppMsg::NextImage => {
+                components.session_page.send(SessionPageMsg::NextImage).unwrap();
+            },
+            AppMsg::PauseImage => {
+                components.session_page.send(SessionPageMsg::PauseImage).unwrap();
+            },
+            AppMsg::PrevImage => {
+                components.session_page.send(SessionPageMsg::PrevImage).unwrap();
             },
         }
         true
@@ -89,7 +104,7 @@ impl Widgets<App, ()> for AppWidgets {
                 set_show_title_buttons: true,
 
                 pack_start = &gtk::Button {
-                    set_visible: watch!(model.page == Page::Session),
+                    set_visible: watch!(model.page != Page::Settings),
                     set_icon_name: "go-previous-symbolic",
                     connect_clicked(sender) => move |_| {
                         send!(sender, AppMsg::ShowSettings);
@@ -113,7 +128,7 @@ impl Widgets<App, ()> for AppWidgets {
                     set_visible: watch!(model.page == Page::Session),
                     set_icon_name: "go-next-symbolic",
                     connect_clicked(sender) => move |_| {
-                        send!(sender, AppMsg::ShowSettings);
+                        send!(sender, AppMsg::NextImage);
                     },
                 },
 
@@ -121,7 +136,7 @@ impl Widgets<App, ()> for AppWidgets {
                     set_visible: watch!(model.page == Page::Session),
                     set_icon_name: "media-playback-start-symbolic",
                     connect_clicked(sender) => move |_| {
-                        send!(sender, AppMsg::ShowSettings);
+                        send!(sender, AppMsg::PauseImage);
                     },
                 },
 
@@ -129,27 +144,12 @@ impl Widgets<App, ()> for AppWidgets {
                     set_visible: watch!(model.page == Page::Session),
                     set_icon_name: "go-previous-symbolic",
                     connect_clicked(sender) => move |_| {
-                        send!(sender, AppMsg::ShowSettings);
+                        send!(sender, AppMsg::PrevImage);
                     },
                 },
             },
             set_child: pages = Some(&gtk::Stack) {
                 set_transition_type: gtk::StackTransitionType::SlideLeftRight,
-
-                add_child: session = &gtk::Box {
-                },
-
-                add_child: complete = &gtk::Box {
-                    append = &gtk::Label {
-                        set_label: "complete",
-                    },
-                },
-
-                add_child: error = &gtk::Box {
-                    append = &gtk::Label {
-                        set_label: "error",
-                    },
-                },
             },
         }
     }

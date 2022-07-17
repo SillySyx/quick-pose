@@ -54,7 +54,7 @@ impl ComponentUpdate<App> for SettingsPage {
     fn update(&mut self, msg: SettingsPageMsg, components: &SettingsPageComponents, _sender: Sender<SettingsPageMsg>, parent_sender: Sender<AppMsg>) {
         match msg {
             SettingsPageMsg::Start => {
-                send!(parent_sender, AppMsg::StartNewSession);
+                send!(parent_sender, AppMsg::StartNewSession(self.settings.clone()));
             },
             SettingsPageMsg::SelectFolder => {
                 components.folder_picker.send(FolderPickerMsg::Show).unwrap();

@@ -18,10 +18,6 @@ impl Settings {
             pause: None,
         }
     }
-
-    pub fn resolve_folder(&self) -> String {
-        resolve_home_folder(&self.folder)
-    }
 }
 
 fn resolve_home_folder<T: Into<String>>(path: T) -> String {

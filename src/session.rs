@@ -9,9 +9,6 @@ use super::settings::Settings;
 pub struct Session {
     pub images: Vec<String>,
     pub current_image: usize,
-
-    // duration_timer
-    // pause_timer
 }
 
 impl Session {

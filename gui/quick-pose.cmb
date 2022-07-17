@@ -12,9 +12,13 @@
 	(1,5,"GtkButton",None,2,None,"end",None,3),
 	(1,6,"GtkButton",None,2,None,"end",None,1),
 	(1,7,"GtkMenuButton",None,2,None,"end",None,None),
-	(1,12,"GtkTreeStore","test2",None,None,None,None,None),
 	(1,13,"GtkStack",None,1,None,None,None,None),
-	(1,14,"GtkComboBox",None,13,None,None,None,None)
+	(1,14,"GtkBox",None,13,None,None,None,None),
+	(1,15,"GtkBox",None,13,None,None,None,1),
+	(1,16,"GtkActionBar",None,14,None,None,None,None),
+	(1,19,"GtkLabel",None,16,None,None,None,None),
+	(1,20,"GtkLabel",None,16,None,None,None,None),
+	(1,21,"GtkImage",None,14,None,None,None,1)
   </object>
   <object_property>
 	(1,1,"GtkWindow","default-height","600",None,None,None,None,None),
@@ -25,6 +29,9 @@
 	(1,5,"GtkButton","icon-name","media-playback-start-symbolic",None,None,None,None,None),
 	(1,6,"GtkButton","icon-name","go-next-symbolic",None,None,None,None,None),
 	(1,7,"GtkMenuButton","popover","9",None,None,None,None,None),
-	(1,14,"GtkComboBox","model","test2",None,None,None,None,None)
+	(1,14,"GtkOrientable","orientation","vertical",None,None,None,None,None),
+	(1,20,"GtkLabel","justify","right",None,None,None,None,None),
+	(1,21,"GtkAccessible","accessible-role","menu-item",None,None,None,None,None),
+	(1,21,"GtkImage","file","/home/syx/Pictures/wallies/wallhaven-9m6kv1.jpg",None,None,None,None,None)
   </object_property>
 </cambalache-project>

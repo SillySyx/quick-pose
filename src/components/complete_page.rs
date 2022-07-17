@@ -4,7 +4,6 @@ use relm4::*;
 use crate::app::{App, AppMsg};
 
 pub struct CompletePage {
-
 }
 
 pub enum CompletePageMsg {
@@ -36,9 +35,15 @@ impl Widgets<CompletePage, App> for CompletePageWidgets {
             set_orientation: gtk::Orientation::Vertical,
             set_halign: gtk::Align::Center,
             set_valign: gtk::Align::Center,
+            set_spacing: 50,
             
+            append = &gtk::Image {
+                set_icon_name: Some("selection-mode-symbolic"),
+                set_pixel_size: 100,
+            },
+
             append = &gtk::Label {
-                set_label: "complete",
+                set_label: "Session complete",
             },
         }
     }
