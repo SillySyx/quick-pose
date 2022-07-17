@@ -50,6 +50,13 @@ impl SessionPage {
         }
     }
 
+    fn get_play_icon(&self) -> String {
+        match self.stopped {
+            true => "media-playback-start-symbolic".into(),
+            false => "media-playback-pause-symbolic".into(),
+        }
+    }
+
     fn intermission(&self) -> bool {
         match self.timer {
             Timer::Intermission(_) => true,
@@ -216,7 +223,7 @@ impl Widgets<SessionPage, App> for SessionPageWidgets {
                     },
 
                     append = &gtk::Button {
-                        set_icon_name: "media-playback-start-symbolic",
+                        set_icon_name: watch!(&model.get_play_icon()),
                         set_has_frame: false,
                         
                         connect_clicked(sender) => move |_| {
