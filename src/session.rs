@@ -9,9 +9,8 @@ use super::settings::Settings;
 pub struct Session {
     pub images: Vec<String>,
     pub current_image: usize,
-
-    // duration_timer
-    // pause_timer
+    pub session_time: usize,
+    pub pause_time: usize,
 }
 
 impl Session {
@@ -19,16 +18,30 @@ impl Session {
         Self {
             images: vec![],
             current_image: 0,
+            session_time: 0,
+            pause_time: 0,
         }
     }
 
     pub fn from(settings: &Settings) -> Self {
         let images = read_images_in_folder(&settings.folder);
         let images = select_images(images, settings.images_number);
-        
+
+        let duration = match settings.duration {
+            Some(value) => value.as_secs() as usize,
+            None => 0,
+        };
+
+        let pause = match settings.pause {
+            Some(value) => value.as_secs() as usize,
+            None => 0,
+        };
+
         Self {
             current_image: 0,
             images,
+            session_time: duration,
+            pause_time: pause,
         }
     }
 

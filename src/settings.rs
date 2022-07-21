@@ -10,17 +10,13 @@ pub struct Settings {
 }
 
 impl Settings {
-    pub fn default() -> Self {
+    pub fn new() -> Self {
         Self {
             folder: resolve_home_folder("~/Pictures"),
             images_number: 10,
             duration: None,
             pause: None,
         }
-    }
-
-    pub fn resolve_folder(&self) -> String {
-        resolve_home_folder(&self.folder)
     }
 }
 
