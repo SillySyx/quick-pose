@@ -99,23 +99,40 @@ impl Widgets<SettingsPage, App> for SettingsPageWidgets {
             set_spacing: 50,
             set_halign: gtk::Align::Center,
             set_valign: gtk::Align::Center,
+            set_width_request: 350,
+            set_margin_top: 30,
+            set_margin_bottom: 30,
+            set_margin_start: 30,
+            set_margin_end: 30,
 
             append = &gtk::Box {
                 set_orientation: gtk::Orientation::Vertical,
                 set_spacing: 5,
+
+                append = &gtk::Box {
+                    set_spacing: 5,
+                    set_homogeneous: true,
+
+                    append = &gtk::Label {
+                        set_halign: gtk::Align::Start,
+                        set_label: "Select folder",
+                    },
+                    append = &gtk::Image {
+                        set_halign: gtk::Align::End,
+                        set_icon_name: Some("help-about-symbolic"),
+                        set_has_tooltip: true,
+                        set_tooltip_text: Some("Images will be randomly selected from this folder"),
+                    },
+                },
                 
-                append = &gtk::Label {
-                    set_halign: gtk::Align::Start,
-                    set_label: "Select folder",
-                },
-                append = &gtk::Label {
-                    set_halign: gtk::Align::Start,
-                    set_sensitive: false,
-                    set_label: "Images will randomly be selected from this folder.",
-                },
                 append = &gtk::Button {
-                    set_label: watch!(&model.get_folder_text()),
                     set_icon_name: "go-down-symbolic",
+
+                    set_child = Some(&gtk::Label) {
+                        set_ellipsize: gtk::pango::EllipsizeMode::End,
+                        set_max_width_chars: 5,
+                        set_label: watch!(&model.get_folder_text()),
+                    },
 
                     connect_clicked(sender) => move |_| {
                         send!(sender, SettingsPageMsg::SelectFolder);
@@ -126,16 +143,22 @@ impl Widgets<SettingsPage, App> for SettingsPageWidgets {
                 set_orientation: gtk::Orientation::Vertical,
                 set_spacing: 5,
                 
-                append = &gtk::Label {
-                    set_halign: gtk::Align::Start,
-                    set_label: "Images",
+                append = &gtk::Box {
+                    set_spacing: 5,
+                    set_homogeneous: true,
+
+                    append = &gtk::Label {
+                        set_halign: gtk::Align::Start,
+                        set_label: "Images",
+                    },
+                    append = &gtk::Image {
+                        set_halign: gtk::Align::End,
+                        set_icon_name: Some("help-about-symbolic"),
+                        set_has_tooltip: true,
+                        set_tooltip_text: Some("Select how many images that should be randomly selected from the folder"),
+                    },
                 },
-                append = &gtk::Label {
-                    set_halign: gtk::Align::Start,
-                    set_sensitive: false,
-                    set_label: "Select how many images that should be randomly selected 
-from defined folder.",
-                },
+
                 append: images = &gtk::ComboBoxText {
                     connect_changed(sender) => move |combo_box| {
                         if let Some(id) = combo_box.active_id() {
@@ -149,15 +172,20 @@ from defined folder.",
                 set_orientation: gtk::Orientation::Vertical,
                 set_spacing: 5,
                 
-                append = &gtk::Label {
-                    set_halign: gtk::Align::Start,
-                    set_label: "Duration",
-                },
-                append = &gtk::Label {
-                    set_halign: gtk::Align::Start,
-                    set_sensitive: false,
-                    set_label: "Limit how long each image is displayed before switching to 
-the next one.",
+                append = &gtk::Box {
+                    set_spacing: 5,
+                    set_homogeneous: true,
+
+                    append = &gtk::Label {
+                        set_halign: gtk::Align::Start,
+                        set_label: "Duration",
+                    },
+                    append = &gtk::Image {
+                        set_halign: gtk::Align::End,
+                        set_icon_name: Some("help-about-symbolic"),
+                        set_has_tooltip: true,
+                        set_tooltip_text: Some("Limit how long each image is displayed before switching to the next one"),
+                    },
                 },
                 append: duration = &gtk::ComboBoxText {
                     connect_changed(sender) => move |combo_box| {
@@ -175,15 +203,20 @@ the next one.",
                 set_orientation: gtk::Orientation::Vertical,
                 set_spacing: 5,
                 
-                append = &gtk::Label {
-                    set_halign: gtk::Align::Start,
-                    set_label: "Pause time",
-                },
-                append = &gtk::Label {
-                    set_halign: gtk::Align::Start,
-                    set_sensitive: false,
-                    set_label: "Add extra time between each image, useful if you want to
-perform some smaller tasks after each image.",
+                append = &gtk::Box {
+                    set_spacing: 5,
+                    set_homogeneous: true,
+
+                    append = &gtk::Label {
+                        set_halign: gtk::Align::Start,
+                        set_label: "Intermission",
+                    },
+                    append = &gtk::Image {
+                        set_halign: gtk::Align::End,
+                        set_icon_name: Some("help-about-symbolic"),
+                        set_has_tooltip: true,
+                        set_tooltip_text: Some("Add extra time between each image, useful if you want to perform some smaller tasks after each image"),
+                    },
                 },
                 append: pause = &gtk::ComboBoxText {
                     connect_changed(sender) => move |combo_box| {
